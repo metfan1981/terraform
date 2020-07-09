@@ -3,38 +3,32 @@ provider "aws" {
   region  = "eu-central-1"
 }
 
-module "full_build" {
-  source = "../modules/ec2_eip_ebs_sg_igw_vpc"
+module "multiple_instances_custom_VPC" {
 
-  # VPC
-  cidr_vpc         = "10.0.0.0/16"
-  vpc_name         = "neteng-vpc"
-  igw_name         = "neteng-igw-1"
-  route_table_name = "routes"
+  source = "../modules/multiple_instances_custom_VPC"
 
-  # Subnet
-  cidr_subnet = "10.0.10.0/24"
-  az          = "eu-central-1b"
-  subnet_name = "neteng-subnet-1"
+  #VPC
+  cidr_vpc = "10.10.0.0/16"
+  vpc_name = "my-own-vpc"
 
-  # Security Group
-  sg_name         = "ssh-http-allowed"
-  egress_rule     = ["0.0.0.0/0"]
-  ingress_rule    = ["0.0.0.0/0"]
-  port_1          = 22
-  port_1_protocol = "tcp"
-  port_2          = 80
-  port_2_protocol = "tcp"
+  #Subnet Public 
+  cidr_public_subnet = "10.10.50.0/24"
 
-  # EBS
-  ebs_name = "neteng-disk"
-  size     = 5
+  #Subnet Private 
+  cidr_private_subnet = "10.10.99.0/24"
 
-  # EC2
-  ec2_name       = "web"
-  ami            = "ami-05ed2c1359acd8af6"
-  instance_count = 2
-  instance_type  = "t2.micro"
-  ssh_key        = "awskey"
-  eip_name       = "eip"
+  #EC2 Public
+  ec2_pub_name          = "pub-host"
+  public_instance_count = 2
+
+  #EC2 Private
+  ec2_priv_name          = "priv-host"
+  private_instance_count = 1
+
+  #EC2 Common
+  instance_type = "t2.micro"
+  ami           = "ami-0d359437d1756caa8"
+  ssh_key       = "awskey"
+  az            = "eu-central-1b"
+
 }
