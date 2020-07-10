@@ -1,3 +1,4 @@
 .terraform/
 .gitignore
 terraform.tfstate*
+parser-tfstate.py
